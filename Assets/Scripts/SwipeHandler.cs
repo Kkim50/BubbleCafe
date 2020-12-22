@@ -9,17 +9,29 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public float swipeSpeedThreshold = 1000f;
     public float easingTime = 0.25f;
     public List<GameObject> views;
+    public int startingViewIndex = 0;
 
-    private Vector3 viewLocation;
-    private Vector3 initialOffset;
-    private int currView = 0;
     private float swipeStartTime = 0f;
+    private int currView;
+    private int nextView;
+    private int prevView;
+    private Vector3 initialOffset;
+    private Vector3 nextOffset;
+    private Vector3 prevOffset;
 
     void Start()
     {
-        viewLocation = transform.position;
+        currView = startingViewIndex;
+        nextView = GetNextViewIndex(currView);
+        prevView = GetPrevViewIndex(currView);
+
         initialOffset = transform.position;
-        currView = 0;
+        nextOffset = new Vector3(Screen.width, 0, 0);
+        prevOffset = new Vector3(-Screen.width, 0, 0);
+
+        views[currView].transform.position = initialOffset;
+        views[nextView].transform.position = initialOffset + nextOffset;
+        views[prevView].transform.position = initialOffset + prevOffset;
     }
 
     public void OnBeginDrag(PointerEventData data) {
@@ -28,7 +40,10 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnDrag(PointerEventData data) {
         float diff = data.position.x - data.pressPosition.x;
-        this.transform.position = viewLocation + new Vector3(Mathf.Clamp(diff, -Screen.width, Screen.width), 0, 0);
+        Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -Screen.width, Screen.width), 0, 0);
+        views[currView].transform.position = initialOffset + diffVec;
+        views[nextView].transform.position = initialOffset + diffVec + nextOffset;
+        views[prevView].transform.position = initialOffset + diffVec + prevOffset;
     }
 
     public void OnEndDrag(PointerEventData data) {
@@ -36,18 +51,21 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         float swipeTime = Time.time - swipeStartTime;
         float swipeSpeed = Mathf.Abs(data.position.x - data.pressPosition.x) / swipeTime;
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
+            Vector3 newLocation = initialOffset;
             if (swipePercent < 0) {
                 // Swipe to the left, move screen right
-                currView = GetNextViewIndex(currView);
+                prevView = currView;
+                currView = nextView;
+                nextView = GetNextViewIndex(currView);
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
-                currView = GetPrevViewIndex(currView);
+                nextView = currView;
+                currView = prevView;
+                prevView = GetPrevViewIndex(currView);
             }
-            Vector3 newLocation = initialOffset + new Vector3(currView * -Screen.width, 0, 0);
-            StartCoroutine(SmoothMove(transform.position, newLocation, easingTime));
-            viewLocation = newLocation;
+            StartCoroutine(SmoothMove(views[currView].transform.position, newLocation, easingTime));
         } else {
-            StartCoroutine(SmoothMove(transform.position, viewLocation, easingTime));
+            StartCoroutine(SmoothMove(views[currView].transform.position, initialOffset, easingTime));
         }
     }
 
@@ -55,7 +73,10 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         float t = 0f;
         while (t <= moveTime) {
             t += Time.deltaTime;
-            transform.position = Vector3.Lerp(startPos, endPos, Mathf.SmoothStep(0f, 1f, t / moveTime));
+            Vector3 lerpedPos = Vector3.Lerp(startPos, endPos, Mathf.SmoothStep(0f, 1f, t / moveTime));
+            views[currView].transform.position = lerpedPos;
+            views[nextView].transform.position = lerpedPos + nextOffset;
+            views[prevView].transform.position = lerpedPos + prevOffset;
             yield return null;
         }
     }
