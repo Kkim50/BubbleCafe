@@ -29,6 +29,14 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         nextOffset = new Vector3(Screen.width, 0, 0);
         prevOffset = new Vector3(-Screen.width, 0, 0);
 
+        // Hide all panels
+        for (int i = 0; i < views.Count; i++) {
+            views[i].SetActive(false);
+        }
+        views[currView].SetActive(true);
+        views[nextView].SetActive(true);
+        views[prevView].SetActive(true);
+
         views[currView].transform.position = initialOffset;
         views[nextView].transform.position = initialOffset + nextOffset;
         views[prevView].transform.position = initialOffset + prevOffset;
@@ -54,14 +62,18 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             Vector3 newLocation = initialOffset;
             if (swipePercent < 0) {
                 // Swipe to the left, move screen right
+                views[prevView].SetActive(false);
                 prevView = currView;
                 currView = nextView;
                 nextView = GetNextViewIndex(currView);
+                views[nextView].SetActive(true);
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
+                views[nextView].SetActive(false);
                 nextView = currView;
                 currView = prevView;
                 prevView = GetPrevViewIndex(currView);
+                views[prevView].SetActive(true);
             }
             StartCoroutine(SmoothMove(views[currView].transform.position, newLocation, easingTime));
         } else {
