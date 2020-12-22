@@ -38,13 +38,10 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
             if (swipePercent < 0) {
                 // Swipe to the left, move screen right
-                currView = (currView + 1) % views.Count;
+                currView = GetNextViewIndex(currView);
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
-                currView = currView - 1;
-                if (currView < 0) {
-                    currView = views.Count - 1;
-                }
+                currView = GetPrevViewIndex(currView);
             }
             Vector3 newLocation = initialOffset + new Vector3(currView * -Screen.width, 0, 0);
             StartCoroutine(SmoothMove(transform.position, newLocation, easingTime));
@@ -61,5 +58,13 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             transform.position = Vector3.Lerp(startPos, endPos, Mathf.SmoothStep(0f, 1f, t / moveTime));
             yield return null;
         }
+    }
+
+    public int GetNextViewIndex(int index) {
+        return (index + 1) % views.Count;
+    }
+
+    public int GetPrevViewIndex(int index) {
+        return (index - 1 + views.Count) % views.Count;
     }
 }
