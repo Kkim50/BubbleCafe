@@ -8,13 +8,18 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public float swipePercentThreshold = 0.2f;
     public float swipeSpeedThreshold = 1000f;
     public float easingTime = 0.25f;
+    public List<GameObject> views;
 
     private Vector3 viewLocation;
+    private Vector3 initialOffset;
+    private int currView = 0;
     private float swipeStartTime = 0f;
 
     void Start()
     {
         viewLocation = transform.position;
+        initialOffset = transform.position;
+        currView = 0;
     }
 
     public void OnBeginDrag(PointerEventData data) {
@@ -23,7 +28,7 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnDrag(PointerEventData data) {
         float diff = data.position.x - data.pressPosition.x;
-        this.transform.position = viewLocation + new Vector3(diff, 0, 0);
+        this.transform.position = viewLocation + new Vector3(Mathf.Clamp(diff, -Screen.width, Screen.width), 0, 0);
     }
 
     public void OnEndDrag(PointerEventData data) {
@@ -31,14 +36,17 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         float swipeTime = Time.time - swipeStartTime;
         float swipeSpeed = Mathf.Abs(data.position.x - data.pressPosition.x) / swipeTime;
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
-            Vector3 newLocation = viewLocation;
             if (swipePercent < 0) {
                 // Swipe to the left, move screen right
-                newLocation += new Vector3(-Screen.width, 0, 0);
+                currView = (currView + 1) % views.Count;
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
-                newLocation += new Vector3(Screen.width, 0, 0);
+                currView = currView - 1;
+                if (currView < 0) {
+                    currView = views.Count - 1;
+                }
             }
+            Vector3 newLocation = initialOffset + new Vector3(currView * -Screen.width, 0, 0);
             StartCoroutine(SmoothMove(transform.position, newLocation, easingTime));
             viewLocation = newLocation;
         } else {
