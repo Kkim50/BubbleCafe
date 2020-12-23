@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class SwipeHandler : MonoBehaviour
 {
     public float swipePercentThreshold = 0.2f;
     public float swipeSpeedThreshold = 1000f;
@@ -18,6 +18,7 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private Vector3 initialOffset;
     private Vector3 nextOffset;
     private Vector3 prevOffset;
+    private Vector3 swipeStartPos;
 
     void Start()
     {
@@ -42,22 +43,24 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         views[prevView].transform.position = initialOffset + prevOffset;
     }
 
-    public void OnBeginDrag(PointerEventData data) {
+    public void OnMouseDown() {
         swipeStartTime = Time.time;
+        swipeStartPos = Input.mousePosition;
     }
 
-    public void OnDrag(PointerEventData data) {
-        float diff = (data.position.x - data.pressPosition.x) / Screen.width * 6;
+    public void OnMouseDrag() {
+        float diff = (Input.mousePosition.x - swipeStartPos.x) / Screen.width * 6;
         Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -6, 6), 0, 0);
         views[currView].transform.position = initialOffset + diffVec;
         views[nextView].transform.position = initialOffset + diffVec + nextOffset;
         views[prevView].transform.position = initialOffset + diffVec + prevOffset;
     }
 
-    public void OnEndDrag(PointerEventData data) {
-        float swipePercent = (data.position.x - data.pressPosition.x) / Screen.width;
+    public void OnMouseUp() {
+        float diff = Input.mousePosition.x - swipeStartPos.x;
+        float swipePercent = diff / Screen.width;
         float swipeTime = Time.time - swipeStartTime;
-        float swipeSpeed = Mathf.Abs(data.position.x - data.pressPosition.x) / swipeTime;
+        float swipeSpeed = Mathf.Abs(diff) / swipeTime;
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
             Vector3 newLocation = initialOffset;
             if (swipePercent < 0) {
