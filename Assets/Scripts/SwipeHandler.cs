@@ -61,8 +61,8 @@ public class SwipeHandler : MonoBehaviour
         float swipePercent = diff / Screen.width;
         float swipeTime = Time.time - swipeStartTime;
         float swipeSpeed = Mathf.Abs(diff) / swipeTime;
+        Vector3 newLocation = initialOffset;
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
-            Vector3 newLocation = initialOffset;
             if (swipePercent < 0) {
                 // Swipe to the left, move screen right
                 views[prevView].SetActive(false);
@@ -70,6 +70,7 @@ public class SwipeHandler : MonoBehaviour
                 currView = nextView;
                 nextView = GetNextViewIndex(currView);
                 views[nextView].SetActive(true);
+                newLocation -= new Vector3(Mathf.Min(swipeSpeed / 2000f, 6), 0, 0);
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
                 views[nextView].SetActive(false);
@@ -77,14 +78,32 @@ public class SwipeHandler : MonoBehaviour
                 currView = prevView;
                 prevView = GetPrevViewIndex(currView);
                 views[prevView].SetActive(true);
+                newLocation += new Vector3(Mathf.Min(swipeSpeed / 2000f, 6), 0, 0);
             }
-            StartCoroutine(SmoothMove(views[currView].transform.position, newLocation, easingTime));
-        } else {
-            StartCoroutine(SmoothMove(views[currView].transform.position, initialOffset, easingTime));
         }
+        // Debug.Log(swipeSpeed);
+        // if (swipePercent < 0) {
+        //     newLocation -= new Vector3(Mathf.Min(swipeSpeed * 0.001f, Screen.width), 0, 0);
+        // } else if (swipePercent > 0) {
+        //     newLocation += new Vector3(Mathf.Min(swipeSpeed * 0.001f, Screen.width), 0, 0);
+        // }
+        StartCoroutine(SmoothMove(views[currView].transform.position, newLocation, easingTime));
     }
 
     IEnumerator SmoothMove(Vector3 startPos, Vector3 endPos, float moveTime) {
+        float t = 0f;
+        while (t <= moveTime) {
+            t += Time.deltaTime;
+            Vector3 lerpedPos = Vector3.Lerp(startPos, endPos, Mathf.SmoothStep(0f, 1f, t / moveTime));
+            views[currView].transform.position = lerpedPos;
+            views[nextView].transform.position = lerpedPos + nextOffset;
+            views[prevView].transform.position = lerpedPos + prevOffset;
+            yield return null;
+        }
+        StartCoroutine(SmoothMove2(views[currView].transform.position, initialOffset, easingTime));
+    }
+
+    IEnumerator SmoothMove2(Vector3 startPos, Vector3 endPos, float moveTime) {
         float t = 0f;
         while (t <= moveTime) {
             t += Time.deltaTime;
