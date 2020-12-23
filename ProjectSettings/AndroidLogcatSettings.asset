@@ -3,8 +3,8 @@
     "m_SelectedPackage": {
         "deviceId": "RF8M210BQ8B",
         "name": "com.DefaultCompany.com.unity.template.mobile2D",
-        "processId": 24709,
-        "exited": true
+        "processId": 1684,
+        "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
@@ -31,6 +31,24 @@
             "name": "com.DefaultCompany.com.unity.template.mobile2D",
             "processId": 24709,
             "exited": true
+        },
+        {
+            "deviceId": "RF8M210BQ8B",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 8522,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8M210BQ8B",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 8927,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8M210BQ8B",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 1684,
+            "exited": false
         }
     ],
     "m_Tags": {
