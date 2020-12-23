@@ -25,9 +25,9 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         nextView = GetNextViewIndex(currView);
         prevView = GetPrevViewIndex(currView);
 
-        initialOffset = transform.position;
-        nextOffset = new Vector3(Screen.width, 0, 0);
-        prevOffset = new Vector3(-Screen.width, 0, 0);
+        initialOffset = new Vector3(0, views[currView].transform.position.y, 0);
+        nextOffset = new Vector3(6, 0, 0);
+        prevOffset = new Vector3(-6, 0, 0);
 
         // Hide all panels
         for (int i = 0; i < views.Count; i++) {
@@ -47,8 +47,8 @@ public class SwipeHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
 
     public void OnDrag(PointerEventData data) {
-        float diff = data.position.x - data.pressPosition.x;
-        Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -Screen.width, Screen.width), 0, 0);
+        float diff = (data.position.x - data.pressPosition.x) / Screen.width * 6;
+        Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -6, 6), 0, 0);
         views[currView].transform.position = initialOffset + diffVec;
         views[nextView].transform.position = initialOffset + diffVec + nextOffset;
         views[prevView].transform.position = initialOffset + diffVec + prevOffset;
