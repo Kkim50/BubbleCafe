@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SwipeHandler : MonoBehaviour
 {
+    public float screenWidthDistance;
     public float swipePercentThreshold = 0.2f;
     public float swipeSpeedThreshold = 1000f;
     public float easingTime = 0.25f;
@@ -27,8 +28,8 @@ public class SwipeHandler : MonoBehaviour
         prevView = GetPrevViewIndex(currView);
 
         initialOffset = new Vector3(0, views[currView].transform.position.y, 0);
-        nextOffset = new Vector3(6, 0, 0);
-        prevOffset = new Vector3(-6, 0, 0);
+        nextOffset = new Vector3(screenWidthDistance, 0, 0);
+        prevOffset = new Vector3(-screenWidthDistance, 0, 0);
 
         // Hide all panels
         for (int i = 0; i < views.Count; i++) {
@@ -49,8 +50,8 @@ public class SwipeHandler : MonoBehaviour
     }
 
     public void OnMouseDrag() {
-        float diff = (Input.mousePosition.x - swipeStartPos.x) / Screen.width * 6;
-        Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -6, 6), 0, 0);
+        float diff = (Input.mousePosition.x - swipeStartPos.x) / Screen.width * screenWidthDistance;
+        Vector3 diffVec = new Vector3(Mathf.Clamp(diff, -screenWidthDistance, screenWidthDistance), 0, 0);
         views[currView].transform.position = initialOffset + diffVec;
         views[nextView].transform.position = initialOffset + diffVec + nextOffset;
         views[prevView].transform.position = initialOffset + diffVec + prevOffset;
@@ -70,7 +71,7 @@ public class SwipeHandler : MonoBehaviour
                 currView = nextView;
                 nextView = GetNextViewIndex(currView);
                 views[nextView].SetActive(true);
-                newLocation -= new Vector3(Mathf.Min(swipeSpeed / 2000f, 6), 0, 0);
+                newLocation -= new Vector3(Mathf.Min(swipeSpeed / 2000f, screenWidthDistance), 0, 0);
             } else if (swipePercent > 0) {
                 // Swipe to the right, move screen left
                 views[nextView].SetActive(false);
@@ -78,7 +79,7 @@ public class SwipeHandler : MonoBehaviour
                 currView = prevView;
                 prevView = GetPrevViewIndex(currView);
                 views[prevView].SetActive(true);
-                newLocation += new Vector3(Mathf.Min(swipeSpeed / 2000f, 6), 0, 0);
+                newLocation += new Vector3(Mathf.Min(swipeSpeed / 2000f, screenWidthDistance), 0, 0);
             }
         }
         // Debug.Log(swipeSpeed);
