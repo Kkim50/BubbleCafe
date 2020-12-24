@@ -13,11 +13,17 @@ public class CurrentOrderHandler : MonoBehaviour
     }
 
     public void AddTea(Tea tea, int amount) {
+        if (currentOrder.size == Size.none) {
+            Debug.Log("Size not set!");
+            return;
+        }
         if (!currentOrder.teaAmounts.ContainsKey(tea)) {
             currentOrder.teaAmounts.Add(tea, 0);
         }
         currentOrder.teaAmounts[tea] += amount;
         currentOrder.totalAmount += amount;
+        Debug.Log("Added " + amount);
+        Debug.Log("Total: " + currentOrder.totalAmount);
         if (currentOrder.totalAmount > (int) currentOrder.size) {
             Debug.Log("Went over total amount!");
             ResetCurrentOrder();
@@ -26,6 +32,14 @@ public class CurrentOrderHandler : MonoBehaviour
 
     public void ResetCurrentOrder() {
         currentOrder = new Order();
-        currentOrder.size = Size.medium;  // TODO: Remove once sizes are implemented
+    }
+
+    public void SetSize(Size size) {
+        if (currentOrder.size != Size.none) {
+            Debug.Log("Size already set!");
+            return;
+        }
+        currentOrder.size = size;
+        Debug.Log("Size set to: " + size);
     }
 }

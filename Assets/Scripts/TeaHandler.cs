@@ -28,6 +28,10 @@ public class TeaHandler : MonoBehaviour
     }
 
     void OnMouseDrag() {
+        if (currentOrderHandler.currentOrder.size == Size.none) {
+            Debug.Log("Size not set!");
+            return;
+        }
         if (held) {
             float timeHeld = Time.time - holdStartTime;
             if (timeHeld > 1.0f) {
