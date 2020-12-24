@@ -49,5 +49,12 @@ public class CurrentOrderHandler : MonoBehaviour
         currentCup = cup;
         currentCup.transform.position = cupPosition.position;
         currentCup.GetComponent<SpriteRenderer>().sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder + 1;
+        currentCup.layer = 2;  // Ignore raycasts
+    }
+
+    public void SendCurrentOrder() {
+        Debug.Log("Sending order!");
+        Destroy(currentCup);
+        ResetCurrentOrder();
     }
 }

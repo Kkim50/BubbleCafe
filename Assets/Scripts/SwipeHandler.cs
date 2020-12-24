@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SwipeHandler : MonoBehaviour
 {
+    public CurrentOrderHandler currentOrderHandler;
     public float screenWidthDistance;
     public float swipePercentThreshold = 0.2f;
     public float swipeSpeedThreshold = 1000f;
@@ -58,10 +59,17 @@ public class SwipeHandler : MonoBehaviour
     }
 
     public void OnMouseUp() {
-        float diff = Input.mousePosition.x - swipeStartPos.x;
-        float swipePercent = diff / Screen.width;
+        float diffY = Input.mousePosition.y - swipeStartPos.y;
+        float swipePercentY = diffY / Screen.height;
+        if (swipePercentY > swipePercentThreshold) {
+            currentOrderHandler.SendCurrentOrder();
+            return;
+        }
+
+        float diffX = Input.mousePosition.x - swipeStartPos.x;
+        float swipePercent = diffX / Screen.width;
         float swipeTime = Time.time - swipeStartTime;
-        float swipeSpeed = Mathf.Abs(diff) / swipeTime;
+        float swipeSpeed = Mathf.Abs(diffX) / swipeTime;
         if (Mathf.Abs(swipePercent) >= swipePercentThreshold || swipeSpeed >= swipeSpeedThreshold) {
             Vector3 newLocation = initialOffset;
             if (swipePercent < 0) {

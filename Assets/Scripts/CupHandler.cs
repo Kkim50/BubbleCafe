@@ -23,8 +23,9 @@ public class CupHandler : MonoBehaviour
     }
 
     void OnMouseUp() {
+        LayerMask layerMask = LayerMask.GetMask("Counter");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, layerMask);
         if (hit.collider != null && hit.transform.name == "SwipeArea") {
             currentOrderHandler.SetCup(draggedCup);
             currentOrderHandler.SetSize(size);
