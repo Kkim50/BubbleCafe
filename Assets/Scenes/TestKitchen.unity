@@ -986,9 +986,7 @@ MonoBehaviour:
   - {fileID: 1156666675}
   - {fileID: 1659990043}
   - {fileID: 292269339}
-  - {fileID: 1788963542}
-  - {fileID: 2103099519}
-  startingViewIndex: 2
+  startingViewIndex: 0
 --- !u!114 &334036665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1206,7 +1204,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966686923}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.22128285, y: 0.39202234, z: -7.5021234}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

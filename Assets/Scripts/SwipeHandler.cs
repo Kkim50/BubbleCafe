@@ -63,6 +63,7 @@ public class SwipeHandler : MonoBehaviour
         float swipePercentY = diffY / Screen.height;
         if (swipePercentY > swipePercentThreshold) {
             currentOrderHandler.SendCurrentOrder();
+            StartCoroutine(SmoothMove(views[currView].transform.position, initialOffset, easingTime));
             return;
         }
 
