@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class SaveData
 {
-    public List<string> availableSizes = new List<string>();
-    public List<string> availableTeas = new List<string>();
+    public List<Size> availableSizes = new List<Size>();
+    public List<Tea> availableTeas = new List<Tea>();
 
 }

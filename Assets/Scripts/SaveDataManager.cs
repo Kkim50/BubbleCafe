@@ -30,8 +30,8 @@ public class SaveDataManager : MonoBehaviour
 
     private SaveData CreateNewSaveData() {
         SaveData save = new SaveData();
-        save.availableSizes.Add("m");
-        save.availableTeas.Add("black");
+        save.availableSizes.Add(Size.medium);
+        save.availableTeas.Add(Tea.black);
         return save;
     }
 

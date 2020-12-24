@@ -5,19 +5,21 @@ using UnityEngine;
 
 public class TeaHandler : MonoBehaviour
 {
+    public SaveDataManager saveManager;
+    public CurrentOrderHandler currentOrderHandler;
+
+    public List<Tea> teas;
+    private int currentTeaIndex;
     private float holdStartTime;
     private bool held;
+
     // Start is called before the first frame update
     void Start()
     {
+        teas = saveManager.saveData.availableTeas;
+        currentTeaIndex = 0;
         holdStartTime = 0f;
         held = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void OnMouseDown() {
@@ -28,7 +30,10 @@ public class TeaHandler : MonoBehaviour
     void OnMouseDrag() {
         if (held) {
             float timeHeld = Time.time - holdStartTime;
-            Debug.Log("Held: " + timeHeld);
+            if (timeHeld > 1.0f) {
+                currentOrderHandler.AddTea(teas[currentTeaIndex], 10);
+                holdStartTime = Time.time;
+            }
         }
     }
 
