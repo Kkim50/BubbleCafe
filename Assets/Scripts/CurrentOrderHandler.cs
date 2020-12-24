@@ -5,6 +5,9 @@ using UnityEngine;
 public class CurrentOrderHandler : MonoBehaviour
 {
     public Order currentOrder;
+    public Transform cupPosition;
+
+    private GameObject currentCup;
 
     // Start is called before the first frame update
     void Start()
@@ -35,11 +38,16 @@ public class CurrentOrderHandler : MonoBehaviour
     }
 
     public void SetSize(Size size) {
-        if (currentOrder.size != Size.none) {
-            Debug.Log("Size already set!");
-            return;
-        }
-        currentOrder.size = size;
+        currentOrder = new Order(size);
         Debug.Log("Size set to: " + size);
+    }
+
+    public void SetCup(GameObject cup) {
+        if (currentCup != null) {
+            Destroy(currentCup);
+        }
+        currentCup = cup;
+        currentCup.transform.position = cupPosition.position;
+        currentCup.GetComponent<SpriteRenderer>().sortingOrder = 2;
     }
 }

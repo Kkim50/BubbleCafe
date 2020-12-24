@@ -23,15 +23,13 @@ public class CupHandler : MonoBehaviour
     }
 
     void OnMouseUp() {
-        Destroy(draggedCup);
-        if (currentOrderHandler.currentOrder.size == Size.none) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-            if (hit.collider != null) {
-                if (hit.transform.name == "SwipeArea") {
-                    currentOrderHandler.SetSize(size);
-                }
-            }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        if (hit.collider != null && hit.transform.name == "SwipeArea") {
+            currentOrderHandler.SetCup(draggedCup);
+            currentOrderHandler.SetSize(size);
+        } else {
+            Destroy(draggedCup);
         }
     }
 }

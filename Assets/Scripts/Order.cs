@@ -32,4 +32,12 @@ public class Order
 
     // Toppings in the cup
     public List<Topping> toppings = new List<Topping>();
+
+    public Order() {
+        this.size = Size.none;
+    }
+
+    public Order(Size size) {
+        this.size = size;
+    }
 }
