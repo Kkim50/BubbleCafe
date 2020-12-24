@@ -48,6 +48,6 @@ public class CurrentOrderHandler : MonoBehaviour
         }
         currentCup = cup;
         currentCup.transform.position = cupPosition.position;
-        currentCup.GetComponent<SpriteRenderer>().sortingOrder = 2;
+        currentCup.GetComponent<SpriteRenderer>().sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder + 1;
     }
 }
