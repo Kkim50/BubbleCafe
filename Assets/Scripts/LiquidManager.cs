@@ -114,9 +114,11 @@ public class LiquidManager : MonoBehaviour {
     void FixedUpdate() {
         // Compute independent update of each node
         for (int i = 0; i < numNodes; i++) {
+            // Compute spring force
             float y_disp = y_positions[i] - baseHeight;
             float y_accel = - springConstant * y_disp - damping * y_vels[i];
 
+            // Position and velocity update
             y_positions[i] += y_vels[i] * Time.deltaTime;
             y_vels[i] += y_accel * Time.deltaTime;
 
@@ -124,26 +126,15 @@ public class LiquidManager : MonoBehaviour {
         }
 
         // Compute influence from neighbor nodes
-        float[] diffs = new float[numNodes];
-        for (int i = 0; i < 8; i++) {
-
-            // Compute pulling force from neighbors
-            for (int j = 0; j < numNodes; j++) {
-                diffs[j] = 0;
-                if (j > 0) {
-                    diffs[j] += spread * (y_positions[j - 1] - y_positions[j]);
-                }
-                if (j < numNodes - 1) {
-                    diffs[j] += spread * (y_positions[j + 1] - y_positions[j]);
-                }
+        for (int i = 0; i < numNodes; i++) {
+            float y_accel = 0;
+            if (i > 0) {
+                y_accel += spread * (y_positions[i - 1] - y_positions[i]);
             }
-
-            // Update velocity and position
-            for (int j = 0; j < numNodes; j++) {
-                y_vels[j] += diffs[j] * Time.deltaTime;
-                // Behaves better when the next line is commented out
-                // y_positions[j] += diffs[j] * Time.deltaTime;
+            if (i < numNodes - 1) {
+                y_accel += spread * (y_positions[i + 1] - y_positions[i]);
             }
+            y_vels[i] += y_accel * Time.deltaTime;
         }
 
         UpdateMeshPositions();
