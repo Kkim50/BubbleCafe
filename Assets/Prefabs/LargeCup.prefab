@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -73047326023214091, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c0e77787096e54ad7a27a97ddf5bc9f6, type: 3}
     - target: {fileID: 1704278529325686477, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
       propertyPath: m_Name
       value: LargeCup
@@ -14,14 +18,6 @@ PrefabInstance:
     - target: {fileID: 1765148671773768918, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765148671773768918, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1765148671773768918, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 1765148671773768918, guid: c70b6ff54c5944da1969449c2c368053, type: 3}
       propertyPath: m_LocalPosition.x
