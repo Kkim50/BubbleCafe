@@ -7,6 +7,9 @@ public class LiquidManager : MonoBehaviour {
     [Tooltip("The prefab to use as a splash particle effect.")]
     public Particle splashParticlePrefab;
 
+    [Tooltip("Z position of the particles.")]
+    public float particleZ;
+
     [Tooltip("Material for rendering the surface of the liquid.")]
     public Material surfaceMaterial;
 
@@ -62,7 +65,6 @@ public class LiquidManager : MonoBehaviour {
         // Initialize LineRenderer for drawing the surface of the water
         surfaceRenderer = this.gameObject.AddComponent<LineRenderer>();
         surfaceRenderer.material = surfaceMaterial;
-        surfaceRenderer.material.renderQueue = 1000;
         surfaceRenderer.positionCount = numNodes;
         surfaceRenderer.startWidth = surfaceWidth;
         surfaceRenderer.endWidth = surfaceWidth;
@@ -105,9 +107,8 @@ public class LiquidManager : MonoBehaviour {
             meshes[i].uv = uvs;
             meshes[i].triangles = triangles;
 
-            meshObjs[i] = Instantiate(bodyMesh, Vector3.zero, Quaternion.identity);
+            meshObjs[i] = Instantiate(bodyMesh, Vector3.zero, Quaternion.identity, this.transform);
             meshObjs[i].GetComponent<MeshFilter>().mesh = meshes[i];
-            meshObjs[i].transform.parent = transform;
         }
     }
 
@@ -171,7 +172,7 @@ public class LiquidManager : MonoBehaviour {
             y_vels[i] += vel;
         }
 
-        Vector3 pos = new Vector3(x_positions[mid], y_positions[mid], z);
+        Vector3 pos = new Vector3(x_positions[mid], y_positions[mid], particleZ);
         GenerateParticles(pos);
     }
 
